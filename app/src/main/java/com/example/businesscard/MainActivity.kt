@@ -3,25 +3,10 @@ package com.example.businesscard
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,141 +23,109 @@ import com.example.businesscard.ui.theme.BusinessCardTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             BusinessCardTheme {
-                Surface (
+                Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color =MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    BusinessCard()
+                    BusinessCard(
+                        name = stringResource(R.string.name_for_card),
+                        title = stringResource(R.string.context),
+                        phone = stringResource(R.string.phone_number),
+                        profileImage = R.drawable.android_logo,
+                        contactIcon = R.drawable.call
+                    )
                 }
             }
         }
     }
 }
-/*
-@Composable
-fun BusinessCard(modifier: Modifier = Modifier) {
-    val image = painterResource(R.drawable.android_logo)
-    val icon = painterResource(R.drawable.call)
-    Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFB7EEb7)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Image(
-            painter = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(80.dp)
-                .background(color = Color(0xFF006161))
-                .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
-        )
-        Text(
-            text = stringResource(R.string.name_for_card),
-            modifier = Modifier,
-            fontSize = 24.sp
-        )
-        Text(
-            text = stringResource(R.string.context),
-            modifier = Modifier,
-            fontSize = 12.sp,
-            color = Color(0xFF008b8b),
-            fontWeight = FontWeight.Bold
-        )
-        //Spacer(Modifier.weight(1f))
-        Text(
-            text = stringResource(R.string.name_for_card),
-            modifier = Modifier,
-            fontSize = 12.sp
-        )
-        /*
-        Row{
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(15.dp)
-                    .padding(vertical = 2.dp)
-            )
-            Text(
-                text = stringResource(R.string.name_for_card),
-                modifier = Modifier,
-                fontSize = 12.sp
-            )
-        }*/
 
-    }
-}*/
 @Composable
-fun BusinessCard(modifier: Modifier = Modifier) {
-    val image = painterResource(R.drawable.android_logo)
-    val icon = painterResource(R.drawable.call)
+fun BusinessCard(
+    name: String,
+    title: String,
+    phone: String,
+    profileImage: Int,
+    contactIcon: Int,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFB7EEb7)),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.weight(1.2f))
+        ProfileImage(imageRes = profileImage)
 
-        Image(
-            painter = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(80.dp)
-                .background(color = Color(0xFF006161))
-                .padding(10.dp)
+        Text(
+            text = name,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Text(
-            text = stringResource(R.string.name_for_card),
-            fontSize = 24.sp
-        )
-
-        Text(
-            text = stringResource(R.string.context),
-            fontSize = 12.sp,
-            color = Color(0xFF008b8b),
-            fontWeight = FontWeight.Bold
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(15.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.name_for_card),
-                modifier = Modifier,
-                fontSize = 15.sp
-            )
-        }
+        ContactInfo(phone = phone, iconRes = contactIcon)
         Spacer(modifier = Modifier.weight(0.2f))
     }
 }
 
+@Composable
+fun ProfileImage(imageRes: Int, modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = imageRes),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .size(100.dp)
+            .background(MaterialTheme.colorScheme.secondary, shape = MaterialTheme.shapes.medium)
+            .padding(8.dp)
+    )
+}
 
+@Composable
+fun ContactInfo(phone: String, iconRes: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = phone,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    }
+}
 
-@Preview(
-    showBackground = true
-)
+@Preview(showBackground = true)
 @Composable
 fun BusinessCardPreview() {
     BusinessCardTheme {
-        BusinessCard()
+        BusinessCard(
+            name = "John Doe",
+            title = "Android Developer",
+            phone = stringResource(R.string.phone_number),
+            profileImage = R.drawable.android_logo,
+            contactIcon = R.drawable.call
+        )
     }
 }
